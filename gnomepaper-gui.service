@@ -1,0 +1,8 @@
+[Unit]
+Description=GnomePaper
+After=network.target
+
+[Service]
+Type=oneshot
+Environment=DISPLAY=:0
+ExecStart=python3 %h/.local/bin/gnomepaper-gui/gp
