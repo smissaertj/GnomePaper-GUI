@@ -55,7 +55,7 @@ def write_config(resolution, interval, theme, persistent):
 		## END 
 
 	except Exception as err:
-		sg.popup(f'An Error occurred: {err}', title='Error!')
+		sg.PopupError(f'An Error occurred: {err}', title='Error!')
 
 
 def install():
@@ -174,6 +174,6 @@ while True:
 				write_config(resolution, interval, persistent, theme)
 				install()
 			except Exception as err:
-				sg.popup(f'An Error occurred: {err}', title='Error!')
+				sg.PopupError(f'An Error occurred: {err}', title='Error!')
 
 window.close()
