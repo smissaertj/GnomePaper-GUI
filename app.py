@@ -101,9 +101,9 @@ layout_column_2 = [
 
 # ----------------------------- Define Theme Keywords ------------------------------------
 layout_column_3 = [
+	[sg.Checkbox('Keep files?', size=(15,1), default=True, change_submits=True, key='-PERSISTENT-')],
 	[sg.Text("Comma separated keywords:")],
 	[sg.InputText(size=(15, 1), key='-THEME-', enable_events=True)],
-	[sg.Checkbox('Keep files?', size=(15,1), default=True, change_submits=True, key='-PERSISTENT-')],
 	[sg.Button('Install Service')]
 ]
 
