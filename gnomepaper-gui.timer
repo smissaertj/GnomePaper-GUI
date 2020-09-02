@@ -2,7 +2,7 @@
 Description=GnomePaper GUI Timer
 
 [Timer]
-OnCalendar=*-*-* *:00/30:00
+OnCalendar=*-*-* *:00:00
 Persistent=true
 Unit=gnomepaper-gui.service
 

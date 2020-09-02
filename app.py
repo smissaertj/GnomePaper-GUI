@@ -27,61 +27,61 @@ systemd_path = os.environ['HOME'] + '/.config/systemd/user'
 app_files = ['gp', 'config.py']
 systemd_files = ['gnomepaper-gui.service', 'gnomepaper-gui.timer']
 
+
 # --- Functions ---
 def write_config(resolution, interval, persistent, theme):
 
-	try:
-		# Write config.py
-		with open('config.py', 'w') as config_file:
-			config_file.write(f'RESOLUTION="{resolution}"\n')
-			config_file.write(f'THEME="{theme}"\n')
-			config_file.write(f'PERSISTENT="{persistent}"\n')
+	# Write config.py
+	with open('config.py', 'w') as config_file:
+		config_file.write(f'RESOLUTION="{resolution}"\n')
+		config_file.write(f'THEME="{theme}"\n')
+		config_file.write(f'PERSISTENT="{persistent}"\n')
 
 
-		## Search/Replace the Systemd Timer Unit
+	## Search/Replace the Systemd Timer Unit
+	# Read the current content of the file
+	with  open('gnomepaper-gui.timer', 'r') as timer_file:
 		# Read the current content of the file
-		with  open('gnomepaper-gui.timer', 'r') as timer_file:
-			# Read the current content of the file
-			content = timer_file.read()
+		content = timer_file.read()
 
-			# Search for a pattern in the file and replace it with the user provided interval, 
-			# assign the new content of the file to a variable.
-			content_new = re.sub("^OnCalendar=\*-\*-\*\s.*$", f"OnCalendar={interval}", content, flags = re.M)
+		# Search for a pattern in the file and replace it with the user provided interval, 
+		# assign the new content of the file to a variable.
+		content_new = re.sub("^OnCalendar=\*-\*-\*\s.*$", f"OnCalendar={interval}", content, flags = re.M)
 
-		# Open the file in write mode
-		with open('gnomepaper-gui.timer', 'w') as timer_file:
-			# overwrite the existing content with the new content
-			timer_file.write(content_new)
-		## END 
-
-	except Exception as err:
-		sg.PopupError(f'An Error occurred: {err}', title='Error!')
+	# Open the file in write mode
+	with open('gnomepaper-gui.timer', 'w') as timer_file:
+		# overwrite the existing content with the new content
+		timer_file.write(content_new)
+	## END 
 
 
 def install():
 
-	try:
-		# Create the install path
-		if not os.path.exists(install_path):
-			os.makedirs(install_path)
-		
-		# Create the systemd user path
-		if not os.path.exists(systemd_path):
-			os.makedirs(systemd_path)
-		
-		# Copy app files to install and systemd path
-		for file in app_files:
-			shutil.copyfile(file, install_path + '/' + file)
-		
-		for file in systemd_files:
-			shutil.copyfile(file, systemd_path + '/' + file)
+	'''
 
-		# Start and enable systemd user timer, reload the systemctl user deamon. 
-		#cmd = 'systemctl --user enable --now gnomepaper-gui.timer > /dev/null 2&>1; systemctl --user daemon-reload'
-		#subprocess.run(cmd, shell=True)
+	# Create the install path
+	if not os.path.exists(install_path):
+		os.makedirs(install_path)
+	
+	# Create the systemd user path
+	if not os.path.exists(systemd_path):
+		os.makedirs(systemd_path)
+	
+	# Copy app files to install and systemd path
+	for file in app_files:
+		shutil.copyfile(file, install_path + '/' + file)
+	
+	for file in systemd_files:
+		shutil.copyfile(file, systemd_path + '/' + file)
 
-	except Exception as err:
-		sg.popup(f'An Error occurred: {err}', title='Error!')
+	# Start and enable systemd user timer, reload the systemctl user deamon. 
+	#cmd = 'systemctl --user enable --now gnomepaper-gui.timer > /dev/null 2&>1; systemctl --user daemon-reload'
+	#subprocess.run(cmd, shell=True)
+
+	'''
+
+	# If no errors, confirm the installation.
+	sg.popup('Success! GnomePaper was installed.')
 
 
 # --- Define Window Layout ---
@@ -101,7 +101,7 @@ column_2 = [
 
 # ----------------------------- Define Theme Keywords ------------------------------------
 column_3 = [
-	[sg.Checkbox('Keep files?', size=(15,1), default=True, change_submits=True, key='-PERSISTENT-')],
+	
 	[sg.Text("Comma separated keywords:")],
 	[sg.InputText(size=(15, 1), key='-THEME-', enable_events=True)]
 ]
@@ -119,7 +119,13 @@ layout = [
 		sg.Column(column_3)
 	],
 	# ---------- ROW 2 ------------
-	[sg.Button('Configure & Install GnomePaper GUI')]
+	[
+		sg.Checkbox('Keep files?', size=(15,1), default=True, change_submits=True, key='-PERSISTENT-'),
+	],
+	# ---------- ROW 3 ------------
+	[
+		sg.Button('Configure & Install GnomePaper GUI')
+	]
 ]
 # --- End Window Layout ---
 
@@ -148,22 +154,17 @@ while True:
 
 	if values['-RESOLUTION-']: # If a resolution is selected in the list
 		resolution = values['-RESOLUTION-'][0]
-		print(f'{resolution} was set!')
 
 	if values['-INTERVAL-']: # if an interval is selected in the list
 		interval = interval_values[values['-INTERVAL-'][0]]
-		print(f"{interval} was set!")
 
 	if values['-PERSISTENT-']:
 		persistent = values['-PERSISTENT-']
-		print(persistent)
 	else:
 		persistent = values['-PERSISTENT-']
-		print(persistent)
 
 	if values['-THEME-']:
 		theme = values['-THEME-']
-		print(theme)
 
 	if event == 'Configure & Install GnomePaper GUI':
 		if not resolution or not interval: # if no interval or resolution was selected
@@ -174,6 +175,7 @@ while True:
 				write_config(resolution, interval, persistent, theme)
 				install()
 			except Exception as err:
-				sg.PopupError(f'An Error occurred: {err}', title='Error!')
+				sg.PopupError(f'Error: {err}', title='Error!')
+				break # Break out of the event loop and close the app. 
 
 window.close()
