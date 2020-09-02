@@ -18,7 +18,7 @@ import subprocess
 import urllib
 
 # General Settings
-if PERSISTENT == 'Y':
+if PERSISTENT == 'True':
 	download_path = os.environ['HOME'] + '/Pictures/GnomePaper/'
 else:
 	download_path = '/tmp/'

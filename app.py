@@ -16,7 +16,7 @@ import re
 import shutil
 import subprocess
 
-
+menu_def = [ ['&Actions', ['!&Uninstall Service', '!&Set Random Image', '&Quit::exit'] ]]
 resolution_list = ['3840x2160', '2560x1440', '1920x1080', '1440x900', '1280x720']
 interval_list = ['30 Minutes', '60 Minutes', '4 Hours', '8 Hours', '24 Hours']
 interval_values = {'30 Minutes': '*-*-* *:00/30:00', '60 Minutes':'*-*-* *:00:00', '4 Hours':'*-*-* 00/4:00:00', '8 Hours':'*-*-* 00/8:00:00', '24 Hours':'*-*-* 00:00:00'}
@@ -28,17 +28,17 @@ app_files = ['gp', 'config.py']
 systemd_files = ['gnomepaper-gui.service', 'gnomepaper-gui.timer']
 
 # --- Functions ---
-def write_config(resolution, interval):
-	print('writing config...')
+def write_config(resolution, interval, theme, persistent):
 
 	try:
 		# Write config.py
 		with open('config.py', 'w') as config_file:
 			config_file.write(f'RESOLUTION="{resolution}"\n')
+			config_file.write(f'THEME="{theme}"\n')
+			config_file.write(f'PERSISTENT="{persistent}"\n')
 
 
 		## Search/Replace the Systemd Timer Unit
-		
 		# Read the current content of the file
 		with  open('gnomepaper-gui.timer', 'r') as timer_file:
 			# Read the current content of the file
@@ -52,7 +52,6 @@ def write_config(resolution, interval):
 		with open('gnomepaper-gui.timer', 'w') as timer_file:
 			# overwrite the existing content with the new content
 			timer_file.write(content_new)
-
 		## END 
 
 	except Exception as err:
@@ -60,7 +59,6 @@ def write_config(resolution, interval):
 
 
 def install():
-	print('creating paths....')
 
 	try:
 		# Create the install path
@@ -79,42 +77,43 @@ def install():
 			shutil.copyfile(file, systemd_path + '/' + file)
 
 		# Start and enable systemd user timer, reload the systemctl user deamon. 
-		#cmd = 'systemctl --user enable --now gnomepaper-gui.timer > /dev/null; systemctl --user daemon-reload'
+		#cmd = 'systemctl --user enable --now gnomepaper-gui.timer > /dev/null 2&>1; systemctl --user daemon-reload'
 		#subprocess.run(cmd, shell=True)
-
 
 	except Exception as err:
 		sg.popup(f'An Error occurred: {err}', title='Error!')
 
 
 # --- Define Window Layout ---
+# ---------- ROW 1 ------------
 # ----------------------------- Define Resolutions list ---------------------------------
 layout_column_1 = [
-	[sg.Text("Screen Resolution")], 
+	[sg.Text("Screen Resolution:")], 
 	[sg.Listbox(resolution_list, size=(9, len(resolution_list)), key='-RESOLUTION-', enable_events=True)]
 ]
 
 
 # ----------------------------- Define Interval List ------------------------------------
 layout_column_2 = [
-	[sg.Text("Interval")],
+	[sg.Text("Interval:")],
 	[sg.Listbox(interval_list, size=(15, len(resolution_list)), key='-INTERVAL-', enable_events=True)]
-
 ]
 
-
-# ----------------------------- Define Buttons  -----------------------------------------
+# ----------------------------- Define Theme Keywords ------------------------------------
 layout_column_3 = [
-	[sg.Text("Actions")],
-	[sg.Button("Install Service")],
-	[sg.Button("Uninstall Service")],
-	[sg.Button("Set Random Image")]
+	[sg.Text("Comma separated keywords:")],
+	[sg.InputText(size=(15, 1), key='-THEME-', enable_events=True)],
+	[sg.Checkbox('Keep files?', size=(15,1), default=True, change_submits=True, key='-PERSISTENT-')],
+	[sg.Button('Install Service')]
 ]
 
 
+
+# --- Main Window Layout ---
 # ----------------------------- Full Layout  --------------------------------------------
 layout = [
 	[
+	sg.Menu(menu_def, pad=(10,10)),
 	sg.Column(layout_column_1),
 	sg.VSeperator(),
 	sg.Column(layout_column_2),
@@ -127,7 +126,7 @@ layout = [
 
 # --------------------------------- Create Main Window ---------------------------------
 #sg.theme('Dark Green 5')
-window = sg.Window("GnomePaper GUI", layout, )
+window = sg.Window("GnomePaper GUI", layout)
 
 
 
@@ -138,6 +137,8 @@ while True:
 
 	resolution = ''
 	interval = ''
+	persistent = ''
+	theme = ''
 
 
 	# End program if user closes window or
@@ -153,13 +154,24 @@ while True:
 		interval = interval_values[values['-INTERVAL-'][0]]
 		print(f"{interval} was set!")
 
+	if values['-PERSISTENT-']:
+		persistent = values['-PERSISTENT-']
+		print(persistent)
+	else:
+		persistent = values['-PERSISTENT-']
+		print(persistent)
+
+	if values['-THEME-']:
+		theme = values['-THEME-']
+		print(theme)
+
 	if event == 'Install Service':
 		if not resolution or not interval: # if no interval or resolution was selected
 			sg.popup('Please select a resolution and interval.', title='Info')
 		else:
 			print('Installing...')
 			try:
-				write_config(resolution, interval)
+				write_config(resolution, interval, persistent, theme)
 				install()
 			except Exception as err:
 				sg.popup(f'An Error occurred: {err}', title='Error!')
