@@ -164,7 +164,7 @@ while True:
 		persistent = values['-PERSISTENT-']
 
 	if values['-THEME-']:
-		theme = values['-THEME-']
+		theme = values['-THEME-'].strip() # Strip the whitespace from sg.Multiline
 
 	if event == 'Configure & Install GnomePaper GUI':
 		if not resolution or not interval: # if no interval or resolution was selected
