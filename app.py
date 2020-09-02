@@ -89,7 +89,7 @@ def install():
 # ----------------------------- Define Resolutions list ---------------------------------
 column_1 = [
 	[sg.Text("Screen Resolution:")], 
-	[sg.Listbox(resolution_list, size=(9, len(resolution_list)), key='-RESOLUTION-', enable_events=True)]
+	[sg.Listbox(resolution_list, size=(15, len(resolution_list)), key='-RESOLUTION-', enable_events=True)]
 ]
 
 
@@ -102,8 +102,8 @@ column_2 = [
 # ----------------------------- Define Theme Keywords ------------------------------------
 column_3 = [
 	
-	[sg.Text("Comma separated keywords:")],
-	[sg.InputText(size=(15, 1), key='-THEME-', enable_events=True)]
+	[sg.Text("Comma Separated Keywords:")],
+	[sg.Multiline(size=(15, len(resolution_list)), key='-THEME-', enable_events=True)]
 ]
 
 
