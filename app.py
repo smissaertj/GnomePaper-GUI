@@ -87,39 +87,39 @@ def install():
 # --- Define Window Layout ---
 # ---------- ROW 1 ------------
 # ----------------------------- Define Resolutions list ---------------------------------
-layout_column_1 = [
+column_1 = [
 	[sg.Text("Screen Resolution:")], 
 	[sg.Listbox(resolution_list, size=(9, len(resolution_list)), key='-RESOLUTION-', enable_events=True)]
 ]
 
 
 # ----------------------------- Define Interval List ------------------------------------
-layout_column_2 = [
+column_2 = [
 	[sg.Text("Interval:")],
 	[sg.Listbox(interval_list, size=(15, len(resolution_list)), key='-INTERVAL-', enable_events=True)]
 ]
 
 # ----------------------------- Define Theme Keywords ------------------------------------
-layout_column_3 = [
+column_3 = [
 	[sg.Checkbox('Keep files?', size=(15,1), default=True, change_submits=True, key='-PERSISTENT-')],
 	[sg.Text("Comma separated keywords:")],
-	[sg.InputText(size=(15, 1), key='-THEME-', enable_events=True)],
-	[sg.Button('Install Service')]
+	[sg.InputText(size=(15, 1), key='-THEME-', enable_events=True)]
 ]
 
 
-
 # --- Main Window Layout ---
-# ----------------------------- Full Layout  --------------------------------------------
 layout = [
+	# ---------- ROW 1 ------------
 	[
-	sg.Menu(menu_def, pad=(10,10)),
-	sg.Column(layout_column_1),
-	sg.VSeperator(),
-	sg.Column(layout_column_2),
-	sg.VSeperator(),
-	sg.Column(layout_column_3)
-	]
+		sg.Menu(menu_def, pad=(10,10)),
+		sg.Column(column_1),
+		sg.VSeperator(),
+		sg.Column(column_2),
+		sg.VSeperator(),
+		sg.Column(column_3)
+	],
+	# ---------- ROW 2 ------------
+	[sg.Button('Configure & Install GnomePaper GUI')]
 ]
 # --- End Window Layout ---
 
@@ -165,7 +165,7 @@ while True:
 		theme = values['-THEME-']
 		print(theme)
 
-	if event == 'Install Service':
+	if event == 'Configure & Install GnomePaper GUI':
 		if not resolution or not interval: # if no interval or resolution was selected
 			sg.popup('Please select a resolution and interval.', title='Info')
 		else:
