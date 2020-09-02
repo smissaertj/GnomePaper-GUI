@@ -16,7 +16,7 @@ import re
 import shutil
 import subprocess
 
-menu_def = [ ['&Actions', ['!&Uninstall Service', '!&Set Random Image', '&Quit::exit'] ]]
+menu_def = [ ['&Actions', ['&Uninstall Service::uninstall', '!&Set Random Image', '&Quit::exit'] ]]
 resolution_list = ['3840x2160', '2560x1440', '1920x1080', '1440x900', '1280x720']
 interval_list = ['30 Minutes', '60 Minutes', '4 Hours', '8 Hours', '24 Hours']
 interval_values = {'30 Minutes': '*-*-* *:00/30:00', '60 Minutes':'*-*-* *:00:00', '4 Hours':'*-*-* 00/4:00:00', '8 Hours':'*-*-* 00/8:00:00', '24 Hours':'*-*-* 00:00:00'}
@@ -57,8 +57,6 @@ def write_config(resolution, interval, persistent, theme):
 
 def install():
 
-	'''
-
 	# Create the install path
 	if not os.path.exists(install_path):
 		os.makedirs(install_path)
@@ -75,13 +73,31 @@ def install():
 		shutil.copyfile(file, systemd_path + '/' + file)
 
 	# Start and enable systemd user timer, reload the systemctl user deamon. 
-	#cmd = 'systemctl --user enable --now gnomepaper-gui.timer > /dev/null 2&>1; systemctl --user daemon-reload'
-	#subprocess.run(cmd, shell=True)
-
-	'''
+	cmd = 'systemctl --user enable --now gnomepaper-gui.timer; systemctl --user daemon-reload'
+	subprocess.run(cmd, shell=True)
 
 	# If no errors, confirm the installation.
 	sg.popup('GnomePaper was installed.', title='Success!')
+
+
+def uninstall():
+	# Disable the Systemd Timer
+	cmd = 'systemctl --user disable --now gnomepaper-gui.timer'
+	subprocess.run(cmd, shell=True)
+
+	# Remove the Systemd Unit files
+	for file in systemd_files:
+		os.remove(systemd_path + '/' + file)
+
+	# Remove the installation directory
+	shutil.rmtree(install_path)
+
+	# Systemd daemon-reload
+	cmd = 'systemctl --user daemon-reload'
+	subprocess.run(cmd, shell=True)
+
+	# If no errors, confirm the uninstallation.
+	sg.popup('GnomePaper GUI was uninstalled.', title='Success!')
 
 
 # --- Define Window Layout ---
@@ -176,5 +192,17 @@ while True:
 			except Exception as err:
 				sg.PopupError(f'Error: {err}', title='Error!')
 				break # Break out of the event loop and close the app. 
+
+	if event == 'Uninstall Service::uninstall':
+		confirmation = sg.PopupOKCancel('Are you sure?', title='Uninstall GnomePaper GUI')
+		if confirmation == 'OK' and os.path.exists(systemd_path + '/' + systemd_files[0]):
+			try:
+				uninstall()
+			except Exception as err:
+				sg.PopupError(f'Error: {err}', title='Error!')
+				break # Break out of the event loop and close the app. 
+		elif confirmation == 'OK' and not os.path.exists(systemd_path + '/' + systemd_files[0]):
+			sg.popup('GnomePaper is not installed.', title='Info')
+
 
 window.close()
