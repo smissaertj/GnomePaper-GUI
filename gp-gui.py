@@ -81,7 +81,7 @@ def install():
 	'''
 
 	# If no errors, confirm the installation.
-	sg.popup('Success! GnomePaper was installed.')
+	sg.popup('GnomePaper was installed.', title='Success!')
 
 
 # --- Define Window Layout ---
@@ -170,7 +170,6 @@ while True:
 		if not resolution or not interval: # if no interval or resolution was selected
 			sg.popup('Please select a resolution and interval.', title='Info')
 		else:
-			print('Installing...')
 			try:
 				write_config(resolution, interval, persistent, theme)
 				install()
