@@ -28,7 +28,7 @@ app_files = ['gp', 'config.py']
 systemd_files = ['gnomepaper-gui.service', 'gnomepaper-gui.timer']
 
 # --- Functions ---
-def write_config(resolution, interval, theme, persistent):
+def write_config(resolution, interval, persistent, theme):
 
 	try:
 		# Write config.py
