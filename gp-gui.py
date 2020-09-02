@@ -149,7 +149,7 @@ while True:
 
 	# End program if user closes window or
 	# presses the OK button
-	if event == sg.WIN_CLOSED:
+	if event == sg.WIN_CLOSED or event == 'Quit::exit':
 		break
 
 	if values['-RESOLUTION-']: # If a resolution is selected in the list
