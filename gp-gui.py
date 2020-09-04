@@ -10,13 +10,16 @@
 # Repository: https://gitlab.com/joerismissaert/gnomepaper-gui
 #######################################################################
 
+from datetime import datetime
 import os
 import PySimpleGUI as sg
 import re
+import requests
 import shutil
 import subprocess
+import urllib
 
-menu_def = [ ['&Actions', ['&Uninstall Service::uninstall', '!&Set Random Image', '&Quit::exit'] ]]
+menu_def = [ ['&Actions', ['&Uninstall Service::uninstall', '&Set Random Image::setrandom', '&Quit::exit'] ]]
 resolution_list = ['3840x2160', '2560x1440', '1920x1080', '1440x900', '1280x720']
 interval_list = ['30 Minutes', '60 Minutes', '4 Hours', '8 Hours', '24 Hours']
 interval_values = {'30 Minutes': '*-*-* *:00/30:00', '60 Minutes':'*-*-* *:00:00', '4 Hours':'*-*-* 00/4:00:00', '8 Hours':'*-*-* 00/8:00:00', '24 Hours':'*-*-* 00:00:00'}
@@ -100,6 +103,27 @@ def uninstall():
 	sg.popup('GnomePaper GUI was uninstalled.', title='Success!')
 
 
+def set_random(resolution):
+
+	download_path = '/tmp/'
+
+	img_date = datetime.now().strftime("%Y-%m-%d_%H-%M")
+	img_path = download_path + img_date + '.jpg'
+
+	# Download the image to download_path
+	try:
+		img_url = f'https://source.unsplash.com/{resolution}'
+		urllib.request.urlretrieve(img_url, download_path+'/'+img_date+'.jpg')
+		# Gnome - Set the background
+		set_wallpaper = 'gsettings set org.gnome.desktop.background picture-uri file://' + img_path
+		subprocess.run(set_wallpaper, shell=True)
+	except urllib.error.HTTPError as http_err:
+		sg.PopupError(f'HTTP Error occurred: {http_err}')
+	except Exception as err:
+		sg.PopupError(f'Other Error occurred: {err}')
+
+
+
 # --- Define Window Layout ---
 # ---------- ROW 1 ------------
 # ----------------------------- Define Resolutions list ---------------------------------
@@ -181,6 +205,12 @@ while True:
 
 	if values['-THEME-']:
 		theme = values['-THEME-'].strip() # Strip the whitespace from sg.Multiline
+
+	if event == 'Set Random Image::setrandom':
+		if not resolution: # if no resolution was selected
+			sg.popup('Please select a resolution and interval.', title='Info')
+		else:
+			set_random(resolution)
 
 	if event == 'Configure & Install GnomePaper GUI':
 		if not resolution or not interval: # if no interval or resolution was selected
