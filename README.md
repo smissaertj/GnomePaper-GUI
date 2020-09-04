@@ -4,15 +4,15 @@ A clone of the [GnomePaper](https://gitlab.com/joerismissaert/gnomepaper) applic
 
 ## Getting Started
 
-Clone the respository and run `python3 -m pip install -r requirements.txt` to install dependencies.
+Clone the respository and run `python3 -m pip install -r requirements.txt` to install dependencies.  
 Install the Python Tkinter OS Package:
 	* `apt install python3-tk`
 	* `dnf install python3-tkinter`
 
 Run  `gp-gui.py` as a regular user:
-	* `chmod +x gp-gui.py` && `./gp-gui.py`
-	or
-	* `python3 gp-gui.py`
+* `chmod +x gp-gui.py && ./gp-gui.py`
+or
+* `python3 gp-gui.py`
 
 
 The GUI:
@@ -27,7 +27,7 @@ You can reconfigure the application by running the GUI again.
 
 ### Usage
 After installing using the `Configure & Install GnomePaper GUI` button, the app will automatically run at the specified interval.
-There's no need to run the GUI again, unless you wish to reconfigure a setting or set a one time randome image.
+There's no need to run the GUI again, unless you wish to reconfigure a setting or set a one time random image.
 
 You can check the next run using `systemctl --user list-timers gnomepaper-gui.timer`
 
