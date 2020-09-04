@@ -16,7 +16,7 @@ or
 
 
 Set your screen resolution and desired interval.  
-You can specify comma separated keywords as well, e.g. `nature,wildlife,forest`
+You can specify comma separated keywords as well, e.g. `nature,wildlife,forest`  
 Click the `Configure & Install GnomePaper GUI` button. 
 
 
