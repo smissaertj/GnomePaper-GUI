@@ -37,4 +37,4 @@ Execute the GUI and select Uninstall Service from the Actions menu.
 * You need to have the Python Tkinter OS package installed:
   * `apt install python3-tk`
   * `dnf install python3-tkinter`
-* You need the `PySimpleGUI` Python module: `python3 -m pip install PySimpleGUI`
+* You need the `PySimpleGUI` and `requests` Python module: `python3 -m pip install PySimpleGUI requests`
