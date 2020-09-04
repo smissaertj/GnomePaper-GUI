@@ -15,15 +15,23 @@ or
 * `python3 gp-gui.py`
 
 
+Set your screen resolution and desired interval.  
+You can specify comma separated keywords as well, e.g. `nature,wildlife,forest`
+Click the `Configure & Install GnomePaper GUI` button. 
+
+
+![](screenshot.png)
+
+
 The GUI:
 * writes the user provided variables to `config.py`. When the application is executed this file is read.
-* moves the `app.py` and `config.py` files to `~/.local/bin/gnomepaper-gui/`.
+* moves the `gp` and `config.py` files to `~/.local/bin/gnomepaper-gui/`.
 * moves the `gnomepaper-gui.timer` Systemd Timer unit and `gnomepaper-gui.service` Systemd Service unit to `~/.config/systemd/user`.
 * enables the Systemd Timer unit.
 
 You can reconfigure the application by running the GUI again. 
 
-![](screenshot.png)
+
 
 ### Usage
 After installing using the `Configure & Install GnomePaper GUI` button, the app will automatically run at the specified interval.
