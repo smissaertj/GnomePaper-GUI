@@ -5,13 +5,13 @@ A clone of the [GnomePaper](https://gitlab.com/joerismissaert/gnomepaper) applic
 ## Getting Started
 
 Clone the respository and run `python3 -m pip install -r requirements.txt` to install dependencies.  
-Install the Python Tkinter OS Package:
+Install the Python Tkinter OS Package:  
 	* `apt install python3-tk`
 	* `dnf install python3-tkinter`
 
 Run  `gp-gui.py` as a regular user:
-* `chmod +x gp-gui.py && ./gp-gui.py`
-or
+* `chmod +x gp-gui.py && ./gp-gui.py`  
+or  
 * `python3 gp-gui.py`
 
 

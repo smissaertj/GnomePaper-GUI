@@ -111,16 +111,12 @@ def set_random(resolution):
 	img_path = download_path + img_date + '.jpg'
 
 	# Download the image to download_path
-	try:
-		img_url = f'https://source.unsplash.com/{resolution}'
-		urllib.request.urlretrieve(img_url, download_path+'/'+img_date+'.jpg')
-		# Gnome - Set the background
-		set_wallpaper = 'gsettings set org.gnome.desktop.background picture-uri file://' + img_path
-		subprocess.run(set_wallpaper, shell=True)
-	except urllib.error.HTTPError as http_err:
-		sg.PopupError(f'HTTP Error occurred: {http_err}')
-	except Exception as err:
-		sg.PopupError(f'Other Error occurred: {err}')
+	img_url = f'https://source.unsplash.com/{resolution}'
+	urllib.request.urlretrieve(img_url, download_path+'/'+img_date+'.jpg')
+	# Gnome - Set the background
+	set_wallpaper = 'gsettings set org.gnome.desktop.background picture-uri file://' + img_path
+	subprocess.run(set_wallpaper, shell=True)
+	
 
 
 
@@ -208,9 +204,14 @@ while True:
 
 	if event == 'Set Random Image::setrandom':
 		if not resolution: # if no resolution was selected
-			sg.popup('Please select a resolution and interval.', title='Info')
+			sg.popup('Please select a resolution.', title='Info')
 		else:
-			set_random(resolution)
+			try:
+				set_random(resolution)
+			except urllib.error.HTTPError as http_err:
+				sg.PopupError(f'HTTP Error occurred: {http_err}')
+			except Exception as err:
+				sg.PopupError(f'Error occurred: {err}')
 
 	if event == 'Configure & Install GnomePaper GUI':
 		if not resolution or not interval: # if no interval or resolution was selected
