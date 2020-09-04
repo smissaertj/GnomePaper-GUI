@@ -17,7 +17,9 @@ or
 
 Set your screen resolution and desired interval.  
 You can specify comma separated keywords as well, e.g. `nature,wildlife,forest`  
-Click the `Configure & Install GnomePaper GUI` button. 
+Click the `Configure & Install GnomePaper GUI` button.  
+
+Alternatively, you can set a one time random image using `Set Random Image` in the Actions menu without installing.
 
 
 ![](screenshot.png)
@@ -45,7 +47,7 @@ NEXT                        LEFT       LAST                        PASSED    UNI
 Thu 2020-09-03 17:00:00 +04 13min left Thu 2020-09-03 16:30:37 +04 16min ago gnomepaper-gui.timer gnomepaper-gui.service
 ```
 
-Alternatively,  you can set a one time random image using `Set Random Image` in the Actions menu. 
+Alternatively, you can set a one time random image using `Set Random Image` in the Actions menu. 
 
 ### Uninstallation
 Execute the GUI and select Uninstall Service from the Actions menu.
