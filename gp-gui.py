@@ -55,7 +55,7 @@ def write_config(resolution, interval, persistent, theme):
 	with open('gnomepaper-gui.timer', 'w') as timer_file:
 		# overwrite the existing content with the new content
 		timer_file.write(content_new)
-	## END 
+	## END Search/Replace the Systemd Timer Unit
 
 
 def install():
@@ -113,11 +113,10 @@ def set_random(resolution):
 	# Download the image to download_path
 	img_url = f'https://source.unsplash.com/{resolution}'
 	urllib.request.urlretrieve(img_url, download_path+'/'+img_date+'.jpg')
+
 	# Gnome - Set the background
 	set_wallpaper = 'gsettings set org.gnome.desktop.background picture-uri file://' + img_path
 	subprocess.run(set_wallpaper, shell=True)
-	
-
 
 
 # --- Define Window Layout ---
@@ -171,7 +170,6 @@ layout = [
 window = sg.Window("GnomePaper GUI", layout)
 
 
-
 # ----- Run the Event Loop -----
 # --------------------------------- Event Loop ---------------------------------
 while True:
@@ -186,7 +184,7 @@ while True:
 	# End program if user closes window or
 	# presses the OK button
 	if event == sg.WIN_CLOSED or event == 'Quit::exit':
-		break
+		break # Break out of the event loop and close the app. 
 
 	if values['-RESOLUTION-']: # If a resolution is selected in the list
 		resolution = values['-RESOLUTION-'][0]
@@ -200,7 +198,7 @@ while True:
 		persistent = values['-PERSISTENT-']
 
 	if values['-THEME-']:
-		theme = values['-THEME-'].strip() # Strip the whitespace from sg.Multiline
+		theme = values['-THEME-'].strip() # Strip the whitespace from sg.Multiline in column_3 (line 141)
 
 	if event == 'Set Random Image::setrandom':
 		if not resolution: # if no resolution was selected
@@ -208,10 +206,13 @@ while True:
 		else:
 			try:
 				set_random(resolution)
+				sg.PopupAutoClose('Random image was set!', title='Set Random Image', auto_close=True, auto_close_duration=5)
 			except urllib.error.HTTPError as http_err:
 				sg.PopupError(f'HTTP Error occurred: {http_err}')
+				# We don't break out of the event loop on an HTTP error. 
 			except Exception as err:
 				sg.PopupError(f'Error occurred: {err}')
+				break # Break out of the event loop and close the app.
 
 	if event == 'Configure & Install GnomePaper GUI':
 		if not resolution or not interval: # if no interval or resolution was selected
