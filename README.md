@@ -1,6 +1,6 @@
 # GnomePaper GUI
 
-A clone of the [GnomePaper](https://gitlab.com/joerismissaert/gnomepaper) application refactored with a Graphical User Interface using PySimpleGUI.
+A fork of the [GnomePaper](https://gitlab.com/joerismissaert/gnomepaper) application refactored with a Graphical User Interface using PySimpleGUI.
 
 ## Getting Started
 
@@ -16,20 +16,22 @@ or
 
 
 Set your screen resolution and desired interval.  
-You can specify comma separated keywords as well, e.g. `nature,wildlife,forest`  
+You can specify comma separated keywords as well, e.g. `nature,wildlife,forest` 
+Choose you wish to keep the downloaded images. If enabled, images are saved to `~/Pictures/GnomePaper`. 
 Click the `Configure & Install GnomePaper GUI` button.  
 
 Alternatively, you can set a one time random image using `Set Random Image` in the Actions menu without installing.
+Any interval or keywords are ignored using this function. 
 
 
 ![](screenshot.png)
 
 
-The GUI:
+The `Configure & Install GnomePaper GUI` function:
 * writes the user provided variables to `config.py`. When the application is executed this file is read.
 * moves the `gp` and `config.py` files to `~/.local/bin/gnomepaper-gui/`.
 * moves the `gnomepaper-gui.timer` Systemd Timer unit and `gnomepaper-gui.service` Systemd Service unit to `~/.config/systemd/user`.
-* enables the Systemd Timer unit.
+* enables and starts the Systemd Timer unit.
 
 You can reconfigure the application by running the GUI again. 
 
